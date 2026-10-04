@@ -7,6 +7,12 @@
 ![platform](https://img.shields.io/badge/platform-Windows%20x64%20%7C%20Web-lightgrey)
 ![Electron](https://img.shields.io/badge/Electron-43-47848F)
 
+![JavaScript](https://img.shields.io/badge/language-JavaScript-F7DF1E?logo=javascript&logoColor=black)
+![HTML](https://img.shields.io/badge/language-HTML-E34F26?logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/language-CSS-1572B6?logo=css3&logoColor=white)
+![Node.js](https://img.shields.io/badge/runtime-Node.js-339933?logo=node.js&logoColor=white)
+![Electron](https://img.shields.io/badge/desktop-Electron-47848F?logo=electron&logoColor=white)
+
 仓库内置 2,194 道全国通用单选题和判断题，其中 787 道带图片。桌面版使用本地题库和图片，Electron 会拦截 HTTP/HTTPS 请求。
 
 学习档案、错题和模拟考试记录保存在当前设备的 `localStorage`。
