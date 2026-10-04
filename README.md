@@ -2,6 +2,11 @@
 
 这是一个 C1 科目一刷题和模拟考试工具。前端使用原生 HTML、CSS 和 JavaScript，桌面版使用 Electron。
 
+[![version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/songyu00yo/c1-kemuyi-web)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![platform](https://img.shields.io/badge/platform-Windows%20x64%20%7C%20Web-lightgrey)
+![Electron](https://img.shields.io/badge/Electron-43-47848F)
+
 仓库内置 2,194 道全国通用单选题和判断题，其中 787 道带图片。桌面版使用本地题库和图片，Electron 会拦截 HTTP/HTTPS 请求。
 
 学习档案、错题和模拟考试记录保存在当前设备的 `localStorage`。
