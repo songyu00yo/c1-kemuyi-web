@@ -1,110 +1,119 @@
-# 🚗 C1 手动挡科目一通关助手
+# C1 手动挡科目一通关助手
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Electron](https://img.shields.io/badge/Electron-43.0.0-blue)](https://www.electronjs.org/)
+这是一个 C1 科目一刷题和模拟考试工具。前端使用原生 HTML、CSS 和 JavaScript，桌面版使用 Electron。
 
-原生 HTML、CSS、JavaScript 编写的 C1 驾照科目一刷题与模拟考试工具。同时支持**浏览器版**和**完全离线的 Windows 桌面 App**。
+仓库内置 2,194 道全国通用单选题和判断题，其中 787 道带图片。桌面版使用本地题库和图片，Electron 会拦截 HTTP/HTTPS 请求。
 
-> 离线题库包含 2,194 道单选/判断题，787 张图片均打包进应用。学习档案和成绩仅保存在本地，不上传云端。
+学习档案、错题和模拟考试记录保存在当前设备的 `localStorage`。
 
-## ✨ 功能
+## 功能
 
-- 📝 **顺序刷题** — 按章节逐题练习，实时查看对错
-- 🎯 **随机练习** — 随机抽题，打乱选项顺序
-- 📊 **模拟考试** — 45 分钟倒计时，100 题，90 分及格
-- 📈 **学习档案** — 记录做题进度、正确率、错题本
-- 🖥️ **浏览器版** — 无需安装，打开即用
-- 💻 **桌面 App** — Electron 打包，完全离线，无需 Node 或网络
-- 🌐 **离线题库** — 图片和题目全部本地化
+- 顺序练习：按题库顺序做题，并保存当前位置。
+- 随机练习：随机打乱题目顺序。
+- 模拟考试：随机抽取 100 题，限时 45 分钟，90 分及格。
+- 本地档案：支持多个昵称档案，分别保存做题进度、正确次数、错题和考试记录。
+- 离线桌面版：题库和 787 张题图随应用打包，不依赖在线接口。
 
-## 📸 截图
+## 浏览器运行
 
-<!-- TODO: 上传截图后替换下面的占位链接 -->
-<!-- ![刷题界面](screenshots/practice.png) -->
-<!-- ![模拟考试](screenshots/exam.png) -->
+需要 Node.js 和 npm。
 
-## 📦 直接安装（Windows）
+```bash
+git clone https://github.com/songyu00yo/c1-kemuyi-web.git
+cd c1-kemuyi-web
+npm run dev
+```
 
-从 [Releases 页面](../../releases) 下载 `C1-Kemuyi-Setup-*.exe`，双击按向导安装。
+默认地址是 <http://127.0.0.1:4173>。可以用环境变量 `PORT` 修改端口。
 
-> ⚠️ 安装包暂未购买代码签名证书。如果 Windows SmartScreen 显示"Windows 已保护你的电脑"，点击 **"更多信息"** → **"仍要运行"**。可用同目录的 `SHA256SUMS.txt` 校验文件完整性。
+浏览器版会优先读取 `src/data/questions.offline.json`。如果该文件不可用，才回退到 `src/data/questions.json`。
 
-## 🔧 开发
+## Windows 桌面版
 
-### 环境要求
+仓库目前没有可直接下载的 GitHub Release。需要 Windows 安装包时，可以在本地构建。
 
-- [Node.js](https://nodejs.org/) >= 18
-- Windows x64（打包需要）
-
-### 安装依赖
+先安装依赖：
 
 ```powershell
 npm install
 ```
 
-### 启动浏览器版
-
-```powershell
-npm run dev
-```
-
-浏览器打开 `http://localhost:3000` 即可使用。
-
-### 启动桌面开发版
+启动 Electron 开发版：
 
 ```powershell
 npm run desktop:dev
 ```
 
-### 生成 Windows 安装包
+生成 Windows x64 安装包：
 
 ```powershell
 npm run dist:win
 ```
 
-该命令会依次：生成图标 → 下载离线图片 → 运行测试 → 构建 NSIS 安装程序 → 生成安装说明和 SHA-256 校验值。
+构建命令会依次生成图标、准备离线题图、检查离线资源、运行测试，再用 `electron-builder` 生成 NSIS 安装程序。安装包输出到 `release/`。
 
-安装包输出在 `release/` 目录。
+如果系统缺少离线题图，`offline:prepare` 会从原题图地址下载缺失文件，因此这一步需要网络。
 
-## 🧪 测试
+生成的安装程序没有商业代码签名证书。Windows SmartScreen 可能显示“未知发布者”或“Windows 已保护你的电脑”。
 
-```powershell
-npm test
+`release/SHA256SUMS.txt` 用于校验构建产物。
+
+## 题库与离线资源
+
+原始题库位于 `src/data/questions.json`。`scripts/prepare-offline.mjs` 会筛选全国通用科目一题目，并把远程题图改成本地路径。
+
+离线检查要求：
+
+- 题目总数为 2,194。
+- 带图题目为 787 道。
+- 离线题库中不能保留 HTTP/HTTPS 地址。
+- 每张题图都必须存在，且文件大小大于 100 字节。
+
+运行检查：
+
+```bash
 npm run offline:check
 ```
 
-## 📁 项目结构
+## 测试
 
+```bash
+npm test
 ```
+
+当前测试入口为 `tests/run-tests.mjs`，会检查题库、存储、模拟考试、静态资源和 Electron 桌面配置。
+
+## 项目结构
+
+```text
 c1-kemuyi-web/
-├── index.html              # 主页面
-├── server.mjs              # 开发服务器
-├── package.json            # 项目配置 & 打包配置
-├── src/
-│   ├── css/                # 样式
-│   ├── js/                 # 核心逻辑
-│   ├── data/               # 题库（原始 + 离线）
-│   └── assets/             # 离线图片资源
+├── index.html
+├── server.mjs
+├── package.json
 ├── desktop/
-│   └── main.cjs            # Electron 主进程
-├── scripts/                # 构建脚本
-├── tests/                  # 测试
-└── release/                # 构建产物（不上传 Git）
+│   └── main.cjs
+├── src/
+│   ├── css/
+│   ├── js/
+│   ├── data/
+│   └── assets/question-images/
+├── scripts/
+├── tests/
+├── build/
+└── release/
 ```
 
-## 🛠 技术栈
+`release/*.exe` 不提交到 Git。`release/` 中只保留校验文件和安装说明等文本文件。
+
+## 技术栈
 
 | 技术 | 用途 |
-|------|------|
-| HTML / CSS / JavaScript | 前端界面与交互逻辑 |
-| [Electron](https://www.electronjs.org/) | 桌面 App 运行时 |
-| [electron-builder](https://www.electron.build/) | NSIS 安装包打包 |
-| Node.js | 开发服务器 & 构建脚本 |
+| --- | --- |
+| HTML、CSS、JavaScript | 页面、练习逻辑和本地状态 |
+| Node.js | 本地开发服务器和构建脚本 |
+| Electron 43 | Windows 桌面运行时 |
+| electron-builder 26 | NSIS 安装包构建 |
 
-## 📄 许可证
+## 许可证
 
-[MIT](LICENSE) © 2026
-
----
-
-⭐ 如果这个项目帮到了你，欢迎点个 Star！
+代码依据 [MIT License](LICENSE) 发布。
